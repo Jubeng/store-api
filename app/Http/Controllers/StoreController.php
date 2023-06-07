@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRequest;
 use App\Services\StoreService;
-use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class StoreController extends Controller
 {
@@ -25,9 +26,20 @@ class StoreController extends Controller
         $this->oStoreService = $oStoreService;
     }
 
-
-    public function addStore(StoreRequest $aRequest)
+    /**
+     * Validates and pass the new store information to the service
+     *
+     * @param \App\Http\Requests\StoreRequest $oRequest
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addStore(StoreRequest $oRequest)
     {
-        dd($aRequest->all());
+        try {
+            $mAddStoreResponse = $this->oStoreService->addStore($oRequest->all());
+            return response()->json([$mAddStoreResponse], $mAddStoreResponse['code']);
+        } catch (Exception $oException) {
+            Log::error('Error occurred while adding store: ' . $oException->getMessage());
+            return response()->json('Error occurred while adding store.', 400);
+        }
     }
 }
