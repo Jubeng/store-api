@@ -21,6 +21,6 @@ Route::post('/store', [StoreController::class, 'addStore']);
 Route::post('/products', [ProductController::class, 'createProduct']);
 Route::get('/products', [ProductController::class, 'getAllProductsByStoreId']);
 Route::get('/products/{product_id}', [ProductController::class, 'getProductInfo']);
-Route::post('/products/:product_id/inventory', [ProductController::class, 'updateProductQty']);
+Route::post('/products/{product_id}/inventory', [ProductController::class, 'updateProductQty']);
 
 

@@ -29,8 +29,10 @@ class StoreService extends BaseService
             return $this->createSuccessMessage('The store is created successfully.', $mAddStoreResponse->toArray(), 200);
 
         } catch (ModelNotFoundException $oModelException) {
-            Log::error('Error occurred while connecting to database: ' . $oModelException->getMessage());
-            return $this->createErrorMessage('Error occurred while connecting to database. Please try again later.', 503);
+            return $this->createExceptionResponse([
+                'sType'       => 'model',
+                'oException'  => $oModelException,
+            ]);
 
         } catch (QueryException $oQueryException) {
             Log::error('Error occurred while executing the store query: ' . $oQueryException->getMessage());
