@@ -16,7 +16,7 @@ class StoreService extends BaseService
      * Add the store information to database
      *
      * @param array $aStore
-     * @return mixed
+     * @return array
      */
     public function addStore(array $aStore)
     {
@@ -26,7 +26,7 @@ class StoreService extends BaseService
                 'url'  => $aStore['url'],
             ]);
 
-            return $this->createSuccessMessage($mAddStoreResponse->toArray(), 200);
+            return $this->createSuccessMessage('The store is created successfully.', $mAddStoreResponse->toArray(), 200);
 
         } catch (ModelNotFoundException $oModelException) {
             Log::error('Error occurred while connecting to database: ' . $oModelException->getMessage());
