@@ -67,4 +67,35 @@ class ProductService extends BaseService
             return $this->createErrorMessage('Error occurred while fetching the product(s). Please try again later.', 422);
         }
     }
+
+    /**
+     * Fetch a product's information using the product id and store id
+     * from database.
+     *
+     * @param array $aParam
+     * @return array
+     */
+    public function getProductInfo(array $aParam)
+    {
+        try {
+            $mGetProductInfoResponse = ProductModel::where([
+                ['store_id', '=', $aParam['store_id']],
+                ['product_id', '=', $aParam['product_id']]
+            ])->get();
+            $sMessage = 'The product information is fetched successfully.';
+            $aProducts = $mGetProductInfoResponse->toArray();
+            if (count($aProducts) < 1) {
+                $sMessage = 'No product found.';
+            }
+            return $this->createSuccessMessage($sMessage, $aProducts, 200);
+
+        } catch (ModelNotFoundException $oModelException) {
+            Log::error('Error occurred while connecting to database: ' . $oModelException->getMessage());
+            return $this->createErrorMessage('Error occurred while connecting to database. Please try again later.', 503);
+
+        } catch (QueryException $oQueryException) {
+            Log::error('Error occurred while executing the fetch product info query: ' . $oQueryException->getMessage());
+            return $this->createErrorMessage('Error occurred while fetching the product info . Please try again later.', 422);
+        }
+    }
 }

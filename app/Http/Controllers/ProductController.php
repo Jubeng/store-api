@@ -31,15 +31,15 @@ class ProductController extends Controller
     }
 
     /**
-     * Pass the product information to service
+     * Pass the product information to service to save to database
      *
-     * @param CreateProductRequest $aRequest
+     * @param CreateProductRequest $oRequest
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createProduct(CreateProductRequest $aRequest)
+    public function createProduct(CreateProductRequest $oRequest)
     {
         try {
-            $mCreateProductResponse = $this->oProductService->createProduct($aRequest->all());
+            $mCreateProductResponse = $this->oProductService->createProduct($oRequest->all());
             return response()->json([$mCreateProductResponse], $mCreateProductResponse['code']);
         } catch (Exception $oException) {
             Log::error('Error occurred while creating product: ' . $oException->getMessage());
@@ -48,16 +48,16 @@ class ProductController extends Controller
     }
 
     /**
-     * Undocumented function
+     * Pass the store_id to service to fetch all its products.
      *
-     * @param \Illuminate\Http\Request $aRequest
+     * @param \Illuminate\Http\Request $oRequest
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getAllProductsByStoreId(Request $aRequest)
+    public function getAllProductsByStoreId(Request $oRequest)
     {
         try {
-            $aValidatedParam = $aRequest->validate([
-                'store_id' => 'required|numeric', // Example validation rule
+            $aValidatedParam = $oRequest->validate([
+                'store_id' => 'required|numeric',
             ]);
             $mCreateProductResponse = $this->oProductService->getAllProductsByStoreId($aValidatedParam['store_id']);
             return response()->json([$mCreateProductResponse], $mCreateProductResponse['code']);
@@ -74,6 +74,39 @@ class ProductController extends Controller
                     422);
             }
             return response()->json('Error occurred while fetching products.', 400);
+        }
+    }
+
+    /**
+     * Pass the product_id and store_id to service to fetch the product's info.
+     *
+     * @param \Illuminate\Http\Request $oRequest
+     * @param string $sProductId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getProductInfo(Request $oRequest, string $sProductId)
+    {
+        try {
+            $oRequest->query->set('product_id', $sProductId);
+            $aValidatedParam = $oRequest->validate([
+                'store_id'   => 'required|numeric',
+                'product_id' => 'required|numeric',
+            ]);
+            $mGetProductInfoResponse = $this->oProductService->getProductInfo($aValidatedParam);
+            return response()->json([$mGetProductInfoResponse], $mGetProductInfoResponse['code']);
+        } catch (Exception $oException) {
+            Log::error('Error occurred while fetching product info: ' . $oException->getMessage());
+
+            if ($oException instanceof \Illuminate\Validation\ValidationException) {
+                $aErrors = $oException->validator->errors()->all();
+                return response()->json(
+                    [
+                        'errors' => $aErrors,
+                        'code'   => 422
+                    ],
+                    422);
+            }
+            return response()->json('Error occurred while fetching product information.', 400);
         }
     }
 }
