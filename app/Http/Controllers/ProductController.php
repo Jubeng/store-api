@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateProductRequest;
 use App\Services\ProductService;
-use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 /**
  * ProductController
@@ -27,12 +29,24 @@ class ProductController extends Controller
         $this->oProductService = $oProductService;
     }
 
-    public function createProduct(Request $aRequest)
+    /**
+     * Undocumented function
+     *
+     * @param \App\Http\Requests\CreateProductRequest $aRequest
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function createProduct(CreateProductRequest $aRequest)
     {
-        dd($aRequest->all());
+        try {
+            $mCreateProductResponse = $this->oProductService->createProduct($aRequest->all());
+            return response()->json([$mCreateProductResponse], $mCreateProductResponse['code']);
+        } catch (Exception $oException) {
+            Log::error('Error occurred while creating product: ' . $oException->getMessage());
+            return response()->json('Error occurred while creating product.', 400);
+        }
     }
 
-    public function getAllProducts(Request $aRequest)
+    public function getAllProducts(CreateProductRequest $aRequest)
     {
         dd($aRequest->all());
     }
