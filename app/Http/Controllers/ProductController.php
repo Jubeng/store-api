@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateProductRequest;
+use App\Http\Requests\UpdateProductQtyRequest;
 use App\Services\ProductService;
 use Exception;
 use Illuminate\Http\Request;
@@ -89,8 +90,8 @@ class ProductController extends Controller
         try {
             $oRequest->query->set('product_id', $sProductId);
             $aValidatedParam = $oRequest->validate([
-                'store_id'   => 'required|numeric',
-                'product_id' => 'required|numeric',
+                'store_id'   => 'required|integer',
+                'product_id' => 'required|integer',
             ]);
             $mGetProductInfoResponse = $this->oProductService->getProductInfo($aValidatedParam);
             return response()->json([$mGetProductInfoResponse], $mGetProductInfoResponse['code']);
@@ -107,6 +108,40 @@ class ProductController extends Controller
                     422);
             }
             return response()->json('Error occurred while fetching product information.', 400);
+        }
+    }
+
+    /**
+     * Pass the product information to service to update the Qty of a product.
+     *
+     * @param \Illuminate\Http\Request $oRequest
+     * @param string $sProductId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateProductQty(Request $oRequest, string $sProductId)
+    {
+        try {
+            $oRequest->query->set('product_id', $sProductId);
+            $aValidatedParam = $oRequest->validate([
+                'store_id'           => 'required|integer',
+                'product_id'         => 'required|integer',
+                'inventory_quantity' => 'required|integer',
+            ]);
+            $mGetProductInfoResponse = $this->oProductService->updateProductQty($aValidatedParam);
+            return response()->json([$mGetProductInfoResponse], $mGetProductInfoResponse['code']);
+        } catch (Exception $oException) {
+            Log::error('Error occurred while updated the product quantity: ' . $oException->getMessage());
+
+            if ($oException instanceof \Illuminate\Validation\ValidationException) {
+                $aErrors = $oException->validator->errors()->all();
+                return response()->json(
+                    [
+                        'errors' => $aErrors,
+                        'code'   => 422
+                    ],
+                    422);
+            }
+            return response()->json('Error occurred while updated the product quantity.', 400);
         }
     }
 }

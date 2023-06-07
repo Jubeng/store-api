@@ -32,8 +32,10 @@ class ProductService extends BaseService
             return $this->createSuccessMessage('The store is created successfully.', $mCreateProductResponse->toArray(), 200);
 
         } catch (ModelNotFoundException $oModelException) {
-            Log::error('Error occurred while connecting to database: ' . $oModelException->getMessage());
-            return $this->createErrorMessage('Error occurred while connecting to database. Please try again later.', 503);
+            return $this->createExceptionResponse([
+                'sType'       => 'model',
+                'oException'  => $oModelException,
+            ]);
 
         } catch (QueryException $oQueryException) {
             Log::error('Error occurred while executing the create product query: ' . $oQueryException->getMessage());
@@ -62,12 +64,17 @@ class ProductService extends BaseService
             return $this->createSuccessMessage($sMessage, $aProducts, 200);
 
         } catch (ModelNotFoundException $oModelException) {
-            Log::error('Error occurred while connecting to database: ' . $oModelException->getMessage());
-            return $this->createErrorMessage('Error occurred while connecting to database. Please try again later.', 503);
+            return $this->createExceptionResponse([
+                'sType'       => 'model',
+                'oException'  => $oModelException,
+            ]);
 
         } catch (QueryException $oQueryException) {
-            Log::error('Error occurred while executing the fetch product query: ' . $oQueryException->getMessage());
-            return $this->createErrorMessage('Error occurred while fetching the product(s). Please try again later.', 422);
+            return $this->createExceptionResponse([
+                'sType'       => 'query',
+                'sMessage'    => 'Error occurred while fetching the product(s)',
+                'oException'  => $oQueryException,
+            ]);
         }
     }
 
@@ -93,12 +100,53 @@ class ProductService extends BaseService
             return $this->createSuccessMessage($sMessage, $aProducts, 200);
 
         } catch (ModelNotFoundException $oModelException) {
-            Log::error('Error occurred while connecting to database: ' . $oModelException->getMessage());
-            return $this->createErrorMessage('Error occurred while connecting to database. Please try again later.', 503);
+            return $this->createExceptionResponse([
+                'sType'       => 'model',
+                'oException'  => $oModelException,
+            ]);
 
         } catch (QueryException $oQueryException) {
-            Log::error('Error occurred while executing the fetch product info query: ' . $oQueryException->getMessage());
-            return $this->createErrorMessage('Error occurred while fetching the product info . Please try again later.', 422);
+            return $this->createExceptionResponse([
+                'sType'       => 'query',
+                'sMessage'    => 'Error occurred while fetching the product info',
+                'oException'  => $oQueryException,
+            ]);
+        }
+    }
+
+    /**
+     * Updates the Qty of the given product.
+     *
+     * @param array $aProductInfo
+     * @return array
+     */
+    public function updateProductQty(array $aProductInfo)
+    {
+        try {
+            $mUpdateProductQtyResponse = ProductModel::where([
+                ['store_id', '=', $aProductInfo['store_id']],
+                ['product_id', '=', $aProductInfo['product_id']]
+            ])->update([
+                'inventory_quantity' => $aProductInfo['inventory_quantity']
+            ]);
+            $sMessage = 'The product quantity is updated successfully.';
+            if ($mUpdateProductQtyResponse < 1) {
+                $sMessage = 'No product found or the input qty. is the same as before, please check your input.';
+            }
+            return $this->createSuccessMessage($sMessage, $aProductInfo, 200);
+
+        } catch (ModelNotFoundException $oModelException) {
+            return $this->createExceptionResponse([
+                'sType'       => 'model',
+                'oException'  => $oModelException,
+            ]);
+
+        } catch (QueryException $oQueryException) {
+            return $this->createExceptionResponse([
+                'sType'       => 'query',
+                'sMessage'    => 'Error occurred while updating the product qty',
+                'oException'  => $oQueryException,
+            ]);
         }
     }
 }

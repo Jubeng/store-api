@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
+
 /**
  * BaseService
  */
@@ -49,5 +51,23 @@ class BaseService
     protected function createTimestamp()
     {
         return date('Y-m-d H:i:s');
+    }
+
+    /**
+     * Creates an error Log and response when Exception is caught.
+     *
+     * @param array $aParam
+     * @return array
+     */
+    protected function createExceptionResponse(array $aParam)
+    {
+        $sMessage = 'Error occurred while connecting to database';
+        $iStatusCode = 503;
+        if ($aParam['sType'] === 'query') {
+            $sMessage = $aParam['sMessage'];
+            $iStatusCode = 422;
+        }
+        Log::error($sMessage . ': ' . $aParam['oException']->getMessage());
+        return $this->createErrorMessage($sMessage . '. Please try again later.', $iStatusCode);
     }
 }
