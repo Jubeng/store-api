@@ -29,13 +29,13 @@ class StoreController extends Controller
     /**
      * Validates and pass the new store information to the service
      *
-     * @param \App\Http\Requests\StoreRequest $aRequest
+     * @param \App\Http\Requests\StoreRequest $oRequest
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addStore(StoreRequest $aRequest)
+    public function addStore(StoreRequest $oRequest)
     {
         try {
-            $mAddStoreResponse = $this->oStoreService->addStore($aRequest->all());
+            $mAddStoreResponse = $this->oStoreService->addStore($oRequest->all());
             return response()->json([$mAddStoreResponse], $mAddStoreResponse['code']);
         } catch (Exception $oException) {
             Log::error('Error occurred while adding store: ' . $oException->getMessage());
