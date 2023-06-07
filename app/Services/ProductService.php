@@ -37,6 +37,9 @@ class ProductService extends BaseService
 
         } catch (QueryException $oQueryException) {
             Log::error('Error occurred while executing the create product query: ' . $oQueryException->getMessage());
+            if ($oQueryException->getCode() === '23000') {
+                return $this->createErrorMessage('The store id is not valid, please input a valid store id.', 422);
+            }
             return $this->createErrorMessage('Error occurred while processing the product. Please try again later.', 422);
         }
     }
