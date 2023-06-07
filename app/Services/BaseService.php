@@ -39,4 +39,14 @@ class BaseService
             'code'    => $iStatusCode
         ];
     }
+
+    /**
+     * Creates a timestamp of the current server time.
+     *
+     * @return string
+     */
+    protected function createTimestamp()
+    {
+        return date('Y-m-d H:i:s');
+    }
 }

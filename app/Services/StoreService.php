@@ -33,11 +33,11 @@ class StoreService extends BaseService
             return $this->createErrorMessage('Error occurred while connecting to database. Please try again later.', 503);
 
         } catch (QueryException $oQueryException) {
-            Log::error('Error occurred while executing the query: ' . $oQueryException->getMessage());
+            Log::error('Error occurred while executing the store query: ' . $oQueryException->getMessage());
             if ($oQueryException->getCode() === '23000') {
                 return $this->createErrorMessage('The URL should be unique, please input a new URL.', 422);
             }
-            return $this->createErrorMessage('Error occurred while processing the data. Please try again later.', 422);
+            return $this->createErrorMessage('Error occurred while processing the store data. Please try again later.', 422);
         }
 
     }

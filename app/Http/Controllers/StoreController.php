@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRequest;
 use App\Services\StoreService;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class StoreController extends Controller
@@ -31,7 +30,7 @@ class StoreController extends Controller
      * Validates and pass the new store information to the service
      *
      * @param \App\Http\Requests\StoreRequest $aRequest
-     * @return void
+     * @return \Illuminate\Http\JsonResponse
      */
     public function addStore(StoreRequest $aRequest)
     {

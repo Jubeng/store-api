@@ -16,6 +16,7 @@ return new class extends Migration
             $table->bigIncrements('product_id')->unsigned();
             $table->unsignedBigInteger('store_id');
             $table->string('name', 50);
+            $table->string('sku', 12);
             $table->integer('inventory_quantity')->default(0);
             $table->timestamp('inventory_updated_time')->default(DB::raw('current_timestamp() ON UPDATE current_timestamp()'));
 
