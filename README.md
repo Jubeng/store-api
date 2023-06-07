@@ -4,7 +4,7 @@ A simple Store API to create and manage Stores and Products.
 
 ## For local setup:
 1. Clone this repository: [https://github.com/Jubeng/store-api](https://github.com/Jubeng/store-api)
-2. I'm using XAMPP, you can use any application you are comfortable, and start MySQL
+2. I'm using XAMPP, you can use any application you are comfortable, and start MySQL.
 3. The `.env` file was sent through email.
 4. Run `composer install`.
 5. Create a database for the API: `store_api` for the database.
@@ -14,4 +14,4 @@ A simple Store API to create and manage Stores and Products.
 
 
 ## Postman Collection
-- The Postman collection will be sent to the email also or you can get it here: https://api.postman.com/collections/5085747-6992de75-477c-47fd-9f57-c58ecd25fd96?access_key=PMAT-01H2BCAYQ0DMVXPTNTKMD98BWT
+- The Postman collection will be sent to the email also or you can get it here: https://drive.google.com/file/d/1wnipVZTUoZkEBZijdwyeoUoOTckMUh1S/view?usp=sharing
