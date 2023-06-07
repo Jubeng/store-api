@@ -27,14 +27,15 @@ class BaseService
     /**
      * Create an array for success message
      *
+     * @param string $sMessage
      * @param array $aData
      * @param integer $iStatusCode
      * @return array
      */
-    protected function createSuccessMessage(array $aData, int $iStatusCode)
+    protected function createSuccessMessage(string $sMessage, array $aData, int $iStatusCode)
     {
         return [
-            'message' => 'The store is created successfully.',
+            'message' => $sMessage,
             'data'    => $aData,
             'code'    => $iStatusCode
         ];
