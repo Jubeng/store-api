@@ -27,7 +27,7 @@ class StoreController extends Controller
     }
 
     /**
-     * Validates and pass the new store information to the service
+     * Validates and pass the new store information to the service fatima
      *
      * @param \App\Http\Requests\StoreRequest $oRequest
      * @return \Illuminate\Http\JsonResponse
